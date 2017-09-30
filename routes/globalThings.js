@@ -4,6 +4,8 @@ var Thing = require("../models/userThing.js");
 var globalThing = require("../models/globalThing.js");
 var middleware = require("./middleware")
 
+// All routes /allthethings root
+
 // Show All Global Things
 router.get("/", function(req, res) {
   res.render("allthethings");

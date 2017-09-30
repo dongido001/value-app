@@ -44,29 +44,31 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
       req.flash("error", "Something went wrong!");
       res.redirect("/mythings");
     } else {
-      // var globalThing = {
-        // id: ,
-        // name: ,
-        // type:
-      // };
-      var newThing = {
-        // globalThing: globalThing,
-        purchaseDate: req.body.purchaseDate,
-        purchasePrice: req.body.purchasePrice
-      };
-      UserThing.create(newThing, function(err, addedThing) {
-        if (err) {
+      GlobalThing.findOne({name: req.query.name}), function(err, foundGlobalThing) {
+        if(err) {
           console.log(err);
-          req.flash("error", "Something went wrong!");
-          res.redirect("/mythings");
         } else {
-          addedThing.save();
-          foundUser.things.push(addedThing);
-          foundUser.save();
-          req.flash("success", "Thing added!");
-          res.redirect("/mythings");
+          console.log(foundGlobalThing);
+          var newThing = {
+            globalThing: foundGlobalThing,
+            purchaseDate: req.body.purchaseDate,
+            purchasePrice: req.body.purchasePrice
+          };
+          UserThing.create(newThing, function(err, addedThing) {
+            if (err) {
+              console.log(err);
+              req.flash("error", "Something went wrong!");
+              res.redirect("/mythings");
+            } else {
+              addedThing.save();
+              foundUser.things.push(addedThing);
+              foundUser.save();
+              req.flash("success", "Thing added!");
+              res.redirect("/mythings");
+            }
+          });
         }
-      });
+      }
     }
   })
 })
